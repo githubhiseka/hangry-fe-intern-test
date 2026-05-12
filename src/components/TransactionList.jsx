@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Search } from "lucide-react";
-import DateGroup from "./DateGroup";
+import TransactionGroup from "./TransactionGroup";
 
 const TABS = ["By Date", "By Category", "By Account"];
 const UNKNOWN_GROUP = "NO DATE SPECIFIED";
+const UNKNOWN_CATEGORY = "UNCATEGORIZED";
+const UNKNOWN_ACCOUNT = "NO ACCOUNT";
 
 function parseDateFromDmy(dateStr) {
   if (!dateStr) return null;
@@ -57,6 +59,10 @@ function formatLabel(dateStr) {
   }).toUpperCase();
 }
 
+function getTransactionDelta(transaction) {
+  return transaction.type === "income" ? transaction.amount : -transaction.amount;
+}
+
 export default function TransactionList({ transactions }) {
   const [activeTab, setActiveTab] = useState("By Date");
   const [search, setSearch] = useState("");
@@ -66,24 +72,55 @@ export default function TransactionList({ transactions }) {
     t.category.toLowerCase().includes(search.toLowerCase())
   );
 
-  const grouped = filtered.reduce((acc, t) => {
-    const normalizedDate = normalizeDmy(t.date);
-    const key = normalizedDate ?? UNKNOWN_GROUP;
-    if (!acc[key]) acc[key] = [];
-    acc[key].push(t);
-    return acc;
-  }, {});
+  const groupConfig = {
+    "By Date": {
+      getKey: (t) => normalizeDmy(t.date) ?? UNKNOWN_GROUP,
+      getLabel: (key) => formatLabel(key),
+      sort: (a, b) => {
+        if (a === UNKNOWN_GROUP) return 1;
+        if (b === UNKNOWN_GROUP) return -1;
 
-  const sortedDates = Object.keys(grouped).sort((a, b) => {
-    if (a === UNKNOWN_GROUP) return 1;
-    if (b === UNKNOWN_GROUP) return -1;
+        const dateA = parseDateFromDmy(a);
+        const dateB = parseDateFromDmy(b);
 
-    const dateA = parseDateFromDmy(a);
-    const dateB = parseDateFromDmy(b);
+        if (!dateA || !dateB) return 0;
+        return dateB - dateA;
+      },
+    },
+    "By Category": {
+      getKey: (t) => t.category?.trim() || UNKNOWN_CATEGORY,
+      getLabel: (key) => key,
+      sort: (a, b, totals) => {
+        const diff = totals[b] - totals[a];
+        if (diff !== 0) return diff;
+        return a.localeCompare(b);
+      },
+    },
+    "By Account": {
+      getKey: (t) => t.account?.trim() || UNKNOWN_ACCOUNT,
+      getLabel: (key) => key,
+      sort: (a, b, totals) => {
+        const diff = totals[b] - totals[a];
+        if (diff !== 0) return diff;
+        return a.localeCompare(b);
+      },
+    },
+  };
 
-    if (!dateA || !dateB) return 0;
-    return dateB - dateA;
+  const activeConfig = groupConfig[activeTab] ?? groupConfig["By Date"];
+  const grouped = {};
+  const groupTotals = {};
+
+  filtered.forEach((transaction) => {
+    const key = activeConfig.getKey(transaction);
+    if (!grouped[key]) grouped[key] = [];
+    grouped[key].push(transaction);
+    groupTotals[key] = (groupTotals[key] ?? 0) + getTransactionDelta(transaction);
   });
+
+  const sortedGroupKeys = Object.keys(grouped).sort((a, b) =>
+    activeConfig.sort(a, b, groupTotals)
+  );
 
   return (
     <div className="flex flex-col items-center">
@@ -120,17 +157,15 @@ export default function TransactionList({ transactions }) {
 
       {/* Groups */}
       <div className="flex flex-col items-center gap-4 p-4">
-        {sortedDates.length === 0 ? (
+        {sortedGroupKeys.length === 0 ? (
           <p className="text-sm text-text-muted text-center py-8">No transactions found.</p>
         ) : (
-          sortedDates.map((date) => (
-            <DateGroup
-              key={date}
-              label={formatLabel(date)}
-              transactions={grouped[date]}
-              dailyTotal={grouped[date].reduce((sum, t) =>
-                t.type === "income" ? sum + t.amount : sum - t.amount, 0
-              )}
+          sortedGroupKeys.map((groupKey) => (
+            <TransactionGroup
+              key={groupKey}
+              label={activeConfig.getLabel(groupKey)}
+              transactions={grouped[groupKey]}
+              groupTotal={groupTotals[groupKey] ?? 0}
             />
           ))
         )}
