@@ -15,10 +15,6 @@
 }
 
 @theme {
-  /* Fonts */
-  --font-sans: "Geist", sans-serif;
-  --font-mono: "Geist Mono", monospace;
-
   /* Colors */
   --color-text-default: #121212;
   --color-text-secondary: #666666;
@@ -26,6 +22,8 @@
 
   --color-danger: #EC221F;
   --color-success: #14AE5C;
+  --color-danger-bg: #FFF0F0;
+  --color-success-bg: #EBFAEB;
   --color-bca: #2A7EBD;
 
   --color-border: #DCDBD599;
@@ -37,6 +35,11 @@
   /* Fonts */
   --font-sans: "Geist", sans-serif;
   --font-mono: "Geist Mono", monospace;
+
+  /* Font weights */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
 
   /* Font sizes */
   --text-xs: 10px;
