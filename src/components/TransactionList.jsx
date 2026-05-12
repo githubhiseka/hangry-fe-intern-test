@@ -50,7 +50,11 @@ function formatLabel(dateStr) {
   if (date.toDateString() === today.toDateString()) return "TODAY";
   if (date.toDateString() === yesterday.toDateString()) return "YESTERDAY";
 
-  return normalizeDmy(dateStr);
+  return date.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  }).toUpperCase();
 }
 
 export default function TransactionList({ transactions }) {
