@@ -1,4 +1,5 @@
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
+import { ACCOUNT_COLORS } from "../constants";
 
 export default function TransactionItem({ transaction }) {
   const { type, account, category, note, amount } = transaction;
@@ -17,11 +18,15 @@ export default function TransactionItem({ transaction }) {
       {/* Badges + note */}
       <div className="flex flex-col gap-0.5 flex-1">
         <div className="flex items-center gap-1">
-          <span className="text-xs font-semibold font-mono text-bca">{account}</span>
+          <span className={`text-xs font-semibold font-mono ${ACCOUNT_COLORS[account] ?? "text-text-secondary"}`}>
+            {account}
+          </span>
           <span className="text-xs font-semibold font-mono text-border">/</span>
           <span className="text-xs font-semibold font-mono text-text-secondary">{category}</span>
         </div>
-        <span className="text-sm font-medium text-text-default">{note}</span>
+        <span className={`text-sm font-medium ${note ? "text-text-default" : "text-text-muted"}`}>
+          {note || "No note"}
+        </span>
       </div>
 
       {/* Amount */}
