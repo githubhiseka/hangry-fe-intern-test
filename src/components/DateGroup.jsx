@@ -1,7 +1,14 @@
 import TransactionItem from "./TransactionItem";
 
 export default function DateGroup({ label, transactions, dailyTotal }) {
-  const isPositive = dailyTotal >= 0;
+  const isPositive = dailyTotal > 0;
+  const isNegative = dailyTotal < 0;
+  const totalToneClass = isPositive
+    ? "text-success"
+    : isNegative
+      ? "text-danger"
+      : "text-text-default";
+  const totalPrefix = isPositive ? "+" : isNegative ? "-" : "";
 
   return (
     <div className="flex flex-col items-center">
@@ -10,8 +17,8 @@ export default function DateGroup({ label, transactions, dailyTotal }) {
         <span className="text-xs font-semibold text-text-muted uppercase tracking-wide">
           {label}
         </span>
-        <span className={`text-xs font-medium font-mono ${isPositive ? "text-success" : "text-danger"}`}>
-          {isPositive ? "+" : "-"}Rp{Math.abs(dailyTotal).toLocaleString("id-ID")}
+        <span className={`text-xs font-medium font-mono ${totalToneClass}`}>
+          {totalPrefix}Rp{Math.abs(dailyTotal).toLocaleString("id-ID")}
         </span>
       </div>
 
