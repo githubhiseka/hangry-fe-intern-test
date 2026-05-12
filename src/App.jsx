@@ -43,7 +43,7 @@ function App() {
       type: "income",
       account: "BCA",
       category: "Food",
-      note: "tes",
+      note: "crazy longggggggggggggggggggggggggggggggggggggggggg note but actually it should be truncated its not long enough tho now",
       amount: 200000,
       date: "12-05-2026",
     },

@@ -24,7 +24,7 @@ export default function TransactionItem({ transaction }) {
           <span className="text-xs font-semibold font-mono text-border">/</span>
           <span className="text-xs font-semibold font-mono text-text-secondary">{category}</span>
         </div>
-        <span className={`text-sm font-medium ${note ? "text-text-default" : "text-text-muted"}`}>
+        <span className={`text-sm truncate max-w-xl font-medium ${note ? "text-text-default" : "text-text-muted"}`}>
           {note || "No note"}
         </span>
       </div>
