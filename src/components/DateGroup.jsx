@@ -4,7 +4,7 @@ export default function DateGroup({ label, transactions, dailyTotal }) {
   const isPositive = dailyTotal >= 0;
 
   return (
-    <div>
+    <div className="flex flex-col items-center">
       {/* Date header */}
       <div className="flex h-[21px] w-[856px] items-center justify-between px-4 py-1">
         <span className="text-xs font-semibold text-text-muted uppercase tracking-wide">
