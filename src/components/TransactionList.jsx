@@ -123,7 +123,7 @@ export default function TransactionList({ transactions }) {
   );
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex h-full w-full flex-col items-center">
       {/* Toolbar */}
       <div className="flex h-[45px] w-[856px] items-center justify-between border-b border-border bg-bg-surface-alt px-4 py-2 box-border">
         <div className="flex h-[29px] items-center gap-2 py-1">
@@ -156,7 +156,7 @@ export default function TransactionList({ transactions }) {
       </div>
 
       {/* Groups */}
-      <div className="flex flex-col items-center gap-4 p-4">
+      <div className="flex w-full flex-1 flex-col items-center gap-4 p-4">
         {sortedGroupKeys.length === 0 ? (
           <p className="text-sm text-text-muted text-center py-8">No transactions found.</p>
         ) : (
