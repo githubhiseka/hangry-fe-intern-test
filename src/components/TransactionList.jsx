@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search } from "lucide-react";
+import { IconSearch } from "@tabler/icons-react";
 import TransactionGroup from "./TransactionGroup";
 
 const TABS = ["By Date", "By Category", "By Account"];
@@ -144,7 +144,7 @@ export default function TransactionList({ transactions }) {
 
         {/* Search */}
         <div className="flex h-[25px] w-[160px] items-center gap-1 rounded-[8px] border-[0.5px] border-border bg-bg-white px-2 py-[6px] box-border">
-          <Search size={12} className="h-3 w-3 shrink-0 text-text-secondary" />
+          <IconSearch size={12} className="h-3 w-3 shrink-0 text-text-secondary" />
           <input
             type="text"
             placeholder="Search transaction"

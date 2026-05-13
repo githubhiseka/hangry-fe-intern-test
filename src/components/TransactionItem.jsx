@@ -1,4 +1,4 @@
-import { ArrowDownRight, ArrowUpRight } from "lucide-react";
+import { IconArrowDownRight, IconArrowUpRight } from "@tabler/icons-react";
 import { ACCOUNT_COLORS } from "../constants";
 
 export default function TransactionItem({ transaction }) {
@@ -10,8 +10,8 @@ export default function TransactionItem({ transaction }) {
       {/* Arrow icon */}
       <div className={`p-1.5 rounded-full ${isIncome ? "bg-success-bg text-success" : "bg-danger-bg text-danger"}`}>
         {isIncome
-          ? <ArrowDownRight size={16} />
-          : <ArrowUpRight size={16} />
+          ? <IconArrowDownRight size={16} />
+          : <IconArrowUpRight size={16} />
         }
       </div>
 
