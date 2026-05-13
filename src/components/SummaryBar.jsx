@@ -9,6 +9,12 @@ export default function SummaryBar({ transactions }) {
 
   const total = income - expense;
 
+  function getTotalTone() {
+    if (total > 0) return "text-success";
+    if (total < 0) return "text-danger";
+    return "text-text-default";
+  }
+
   return (
     <div className="flex h-[48px] w-full items-center border-y border-border bg-bg-surface box-border">
       <div className="flex h-[48px] flex-1 min-w-0 items-center justify-between border-r border-border px-4 py-4 box-border font-mono">
@@ -27,9 +33,9 @@ export default function SummaryBar({ transactions }) {
 
       <div className="flex h-[48px] flex-1 min-w-0 items-center justify-between px-4 py-4 box-border font-mono">
         <span className="text-xs font-medium text-text-secondary uppercase">Total</span>
-        <span className={`text-sm font-medium ${total >= 0 ? "text-success" : "text-danger"}`}>
+        <div className={`text-sm font-medium ${getTotalTone()}`}>
           Rp{Math.abs(total).toLocaleString("id-ID")}
-        </span>
+        </div>
       </div>
     </div>
   );
