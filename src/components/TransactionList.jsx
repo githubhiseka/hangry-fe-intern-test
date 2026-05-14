@@ -125,7 +125,7 @@ export default function TransactionList({ transactions }) {
   return (
     <div className="flex h-full w-full flex-col items-center">
       {/* Toolbar */}
-      <div className="flex h-[45px] w-[856px] items-center justify-between border-b border-border bg-bg-surface-alt px-4 py-2 box-border">
+      <div className="flex h-[45px] w-[856px] items-center justify-between border-b border-border border-x border-border bg-bg-surface-alt px-4 py-2 box-border">
         <div className="flex h-[29px] items-center gap-2 py-1">
           {TABS.map((tab) => (
             <button
