@@ -10,11 +10,3 @@ export const ACCOUNT_COLORS = {
   Jago: "text-jago",
 };
 
-export const DEFAULT_TRANSACTION = {
-  type: "expense",
-  date: new Date().toISOString().split("T")[0],
-  account: "BCA",
-  category: "Food",
-  note: "",
-  amount: 0,
-};
