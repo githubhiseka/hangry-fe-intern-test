@@ -18,3 +18,4 @@
 - Border rendering uses a "single owner per edge" rule (wrapper owns left/right/top, inner rows own separators) to prevent stacked lines. This slightly deviates from the Figma design spec where multiple nested borders overlap.
 - Date input uses `DayPicker` with basic styling even though not specified in the Figma design for intuitiveness
 - Added more mock data for more interactions
+- `Accounts` and `Settings` page is labeled as "In development"
