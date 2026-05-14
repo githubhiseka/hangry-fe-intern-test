@@ -8,7 +8,7 @@ export default function TransactionItem({ transaction }) {
   return (
     <div className="flex h-[47px] w-[824px] items-center justify-between gap-3 rounded-[8px] border-[0.8px] border-border bg-bg-white px-3 py-2 box-border">
       {/* Arrow icon */}
-      <div className={`p-1.5 rounded-full ${isIncome ? "bg-success-bg text-success" : "bg-danger-bg text-danger"}`}>
+      <div className={`p-1 rounded-[24px] ${isIncome ? "bg-success-bg text-success" : "bg-danger-bg text-danger"}`}>
         {isIncome
           ? <IconArrowDownRight size={16} />
           : <IconArrowUpRight size={16} />

@@ -16,7 +16,7 @@ export default function SummaryBar({ transactions }) {
   }
 
   return (
-    <div className="flex h-[48px] w-full items-center border-y border-border bg-bg-surface box-border">
+    <div className="flex h-[48px] w-full items-center border-b border-border bg-bg-surface box-border">
       <div className="flex h-[48px] flex-1 min-w-0 items-center justify-between border-r border-border px-4 py-4 box-border font-mono">
         <span className="text-xs font-medium text-text-secondary uppercase">Expense ↗</span>
         <span className="text-sm font-medium text-danger">
