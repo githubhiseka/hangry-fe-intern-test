@@ -1,5 +1,4 @@
 import { useEffect, useState, useRef } from "react";
-import { DayPicker, Chevron } from "react-day-picker";
 import { ACCOUNTS, CATEGORIES } from "../constants";
 
 function formatDisplay(date) {
@@ -44,11 +43,7 @@ function formatAmountWithDots(value) {
   return digits.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 
-function CalendarChevron(props) {
-  return <Chevron {...props} size={16} />;
-}
-
-export default function EntryForm({ onAdd }) {
+export default function EntryForm({ onAdd, containerRef }) {
   const emptyTransaction = {
     type: "expense",
     date: "",
@@ -61,9 +56,7 @@ export default function EntryForm({ onAdd }) {
   const [form, setForm] = useState(emptyTransaction);
   const [focusedField, setFocusedField] = useState(null);
   const [openDropdown, setOpenDropdown] = useState(null);
-  const [showPicker, setShowPicker] = useState(false);
   const dateRef = useRef(null);
-  const calendarRef = useRef(null);
   const accountButtonRef = useRef(null);
   const categoryButtonRef = useRef(null);
   const accountDropdownRef = useRef(null);
@@ -72,7 +65,7 @@ export default function EntryForm({ onAdd }) {
 
   const parsedDate = parseLocalDate(form.date);
   const currentDate = parsedDate ?? new Date();
-  const isDateActive = focusedField === "date" || showPicker;
+  const isDateActive = focusedField === "date";
   const isAccountActive = focusedField === "account" || openDropdown === "account";
   const isCategoryActive = focusedField === "category" || openDropdown === "category";
   const dateDisplay = form.date
@@ -99,14 +92,12 @@ export default function EntryForm({ onAdd }) {
     if (e.key === "t" || e.key === "T") {
       e.preventDefault();
       setDate(new Date());
-      setShowPicker(false);
     }
     if (e.key === "y" || e.key === "Y") {
       e.preventDefault();
       const yesterday = new Date();
       yesterday.setDate(yesterday.getDate() - 1);
       setDate(yesterday);
-      setShowPicker(false);
     }
     if (e.key === "ArrowLeft") {
       e.preventDefault();
@@ -120,7 +111,7 @@ export default function EntryForm({ onAdd }) {
       next.setDate(next.getDate() + 1);
       setDate(next);
     }
-    if (e.key === "Escape") setShowPicker(false);
+    if (e.key === "Escape") setFocusedField(null);
   }
 
   function handleSubmit() {
@@ -138,21 +129,7 @@ export default function EntryForm({ onAdd }) {
     setForm(prev => ({ ...prev, amount: formatted }));
   }
 
-  function handleDateToggle(event) {
-    setOpenDropdown(null);
-    setShowPicker(prev => {
-      const next = !prev;
-      if (!next) {
-        event?.preventDefault();
-        setFocusedField(null);
-        dateRef.current?.blur();
-      }
-      return next;
-    });
-  }
-
   function handleDropdownToggle(name, event) {
-    setShowPicker(false);
     setOpenDropdown(prev => {
       const next = prev === name ? null : name;
       if (!next) {
@@ -176,7 +153,6 @@ export default function EntryForm({ onAdd }) {
       const target = event.target;
       const isInside = [
         dateRef.current,
-        calendarRef.current,
         accountButtonRef.current,
         categoryButtonRef.current,
         accountDropdownRef.current,
@@ -184,7 +160,6 @@ export default function EntryForm({ onAdd }) {
       ].some(node => node && node.contains(target));
 
       if (!isInside) {
-        setShowPicker(false);
         setOpenDropdown(null);
         setFocusedField(null);
       }
@@ -205,6 +180,7 @@ export default function EntryForm({ onAdd }) {
 
   return (
     <div
+      ref={containerRef}
       className="w-full bg-bg-surface-alt overflow-visible box-border"
       onKeyDown={handleKeyDown}
     >
@@ -269,106 +245,15 @@ export default function EntryForm({ onAdd }) {
           <button
             ref={dateRef}
             onKeyDown={handleDateKeyDown}
-            onMouseDown={handleDateToggle}
-            onFocus={() => setFocusedField("date")}
+            onFocus={() => {
+              setOpenDropdown(null);
+              setFocusedField("date");
+            }}
             onBlur={() => setFocusedField(null)}
             className={`text-sm text-left outline-none cursor-pointer ${form.date ? "text-text-default" : "text-text-muted"}`}
           >
             {dateDisplay}
           </button>
-          {showPicker && (
-            <div ref={calendarRef} className="absolute top-full left-0 z-50 bg-bg-white border border-border rounded-lg shadow-lg mt-1 font-sans text-sm">
-              <DayPicker
-                mode="single"
-                selected={parsedDate ?? undefined}
-                toMonth={new Date()}
-                disabled={{ after: new Date() }}
-                className="font-sans text-sm"
-                style={{
-                  "--rdp-accent-color": "var(--color-text-muted)",
-                  "--rdp-accent-background-color": "var(--color-bg-surface-alt)",
-                  "--rdp-today-color": "var(--color-text-default)",
-                  "--rdp-selected-border": "1px solid transparent",
-                  "--rdp-day_button-border": "1px solid transparent",
-                  "--rdp-day_button-border-radius": "9999px",
-                }}
-                components={{
-                  Chevron: CalendarChevron,
-                }}
-                styles={{
-                  month_caption: {
-                    fontSize: "var(--text-sm)",
-                    fontWeight: "var(--font-weight-semibold)",
-                    color: "var(--color-text-default)",
-                    paddingInline: "8px",
-                  },
-                  caption_label: {
-                    fontSize: "var(--text-sm)",
-                    fontWeight: "var(--font-weight-semibold)",
-                    color: "var(--color-text-default)",
-                  },
-                  nav: {
-                    paddingInline: "8px",
-                  },
-                  weekday: {
-                    color: "#B5B5B5",
-                    fontWeight: "var(--font-weight-medium)",
-                    fontSize: "var(--text-sm)",
-                  },
-                  day: {
-                    color: "var(--color-text-default)",
-                    fontWeight: "var(--font-weight-medium)",
-                    fontSize: "var(--text-sm)",
-                  },
-                  day_button: {
-                    borderRadius: "9999px",
-                    cursor: "pointer",
-                  },
-                  button_previous: {
-                    color: "var(--color-text-muted)",
-                    width: "20px",
-                    height: "20px",
-                    padding: "2px",
-                  },
-                  button_next: {
-                    color: "var(--color-text-muted)",
-                    width: "20px",
-                    height: "20px",
-                    padding: "2px",
-                  },
-                  button_next_disabled: {
-                    display: "none",
-                  },
-                  chevron: {
-                    fill: "var(--color-text-muted)",
-                  },
-                }}
-                modifiersStyles={{
-                  disabled: {
-                    color: "var(--color-text-muted)",
-                    cursor: "not-allowed",
-                  },
-                  selected: {
-                    backgroundColor: "var(--color-bg-surface-alt)",
-                    borderRadius: "9999px",
-                    fontSize: "var(--text-sm)",
-                    fontWeight: "var(--font-weight-medium)",
-                  },
-                  today: {
-                    color: "var(--color-text-default)",
-                    fontWeight: "var(--font-weight-medium)",
-                  },
-                }}
-                onSelect={(date) => {
-                  if (date) {
-                    setDate(date);
-                    setShowPicker(false);
-                    dateRef.current?.focus();
-                  }
-                }}
-              />
-            </div>
-          )}
         </div>
 
         {/* ACCOUNT */}
